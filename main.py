@@ -58,8 +58,7 @@ def seed_recipes():
                   ingredients="6 huevos, 3 patatas, 1 cebolla, aceite de oliva, sal",
                   prep_time=30,
                   description="La clásica tortilla española con patatas y cebolla pochada.",
-                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Tortilla_de_patatas.jpg/640px-Tortill
-  a_de_patatas.jpg"
+                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Tortilla_de_patatas.jpg/640px-Tortilla_de_patatas.jpg"
               ),
               RecipeResponse(
                   name="Gazpacho andaluz",
