@@ -110,6 +110,7 @@ def seed_recipes():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db()
+    seed_recipes()
     yield
 
 app = FastAPI(lifespan=lifespan)
