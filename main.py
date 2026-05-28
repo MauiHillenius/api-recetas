@@ -5,12 +5,7 @@ from typing import Optional
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"]
-    allow_methods=["*"]
-    allow_headers=["*"]
-)
+
 
 #Base de datos
 DATABASE_URL = "sqlite:////data/recipes.db"
@@ -56,6 +51,13 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
 @app.get("/")
