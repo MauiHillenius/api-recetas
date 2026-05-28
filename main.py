@@ -45,6 +45,68 @@ recipes=[]
 def create_db():
     SQLModel.metadata.create_all(engine)
 
+def seed_recipes():
+      with Session(engine) as session:
+          existing = session.exec(select(RecipeResponse)).first()
+          if existing:
+              return
+          recipes = [
+              RecipeResponse(
+                  name="Tortilla española",
+                  category="Desayuno",
+                  servings=4,
+                  ingredients="6 huevos, 3 patatas, 1 cebolla, aceite de oliva, sal",
+                  prep_time=30,
+                  description="La clásica tortilla española con patatas y cebolla pochada.",
+                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Tortilla_de_patatas.jpg/640px-Tortill
+  a_de_patatas.jpg"
+              ),
+              RecipeResponse(
+                  name="Gazpacho andaluz",
+                  category="Entrante",
+                  servings=6,
+                  ingredients="1kg tomates, 1 pepino, 1 pimiento verde, 1 diente de ajo, aceite, vinagre, sal",
+                  prep_time=15,
+                  description="Sopa fría de verduras típica del verano andaluz.",
+
+  image="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Gazpacho_andaluz.jpg/640px-Gazpacho_andaluz.jpg"
+              ),
+              RecipeResponse(
+                  name="Paella valenciana",
+                  category="Principal",
+                  servings=4,
+                  ingredients="400g arroz, 500g pollo, 200g judías verdes, 1 tomate, azafrán, pimentón, aceite, sal",
+                  prep_time=60,
+                  description="El plato más famoso de la cocina española con arroz y pollo.",
+                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Paella_valenciana_original.jpg/640px-
+  Paella_valenciana_original.jpg"
+              ),
+              RecipeResponse(
+                  name="Croquetas de jamón",
+                  category="Aperitivo",
+                  servings=4,
+                  ingredients="100g jamón serrano, 500ml leche, 50g mantequilla, 100g harina, pan rallado, huevo,
+  aceite",
+                  prep_time=45,
+                  description="Croquetas cremosas de jamón serrano, crujientes por fuera y suaves por dentro.",
+
+  image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Croquetas_de_jamon.jpg/640px-Croquetas_de_jamon.jpg"
+              ),
+              RecipeResponse(
+                  name="Churros con chocolate",
+                  category="Postre",
+                  servings=2,
+                  ingredients="200g harina, 250ml agua, sal, aceite para freír, 200g chocolate negro, 200ml leche",
+                  prep_time=20,
+                  description="Churros crujientes acompañados de espeso chocolate caliente para mojar.",
+
+  image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Churros_fritos.jpg/640px-Churros_fritos.jpg"
+              ),
+          ]
+          for recipe in recipes:
+              session.add(recipe)
+          session.commit()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db()
