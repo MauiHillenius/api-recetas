@@ -4,11 +4,12 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 from typing import Optional
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 
 
 #Base de datos
-DATABASE_URL = "sqlite:////data/recipes.db"
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///recipes.db")
 engine = create_engine(DATABASE_URL)
 
 # Modelos
@@ -28,6 +29,7 @@ class RecipeCreate(RecipeBase):
 
 class RecipeResponse(RecipeBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    isFav: Optional[bool] = Field(default=False)
     
 
 class RecipeUpdate(BaseModel):
@@ -38,6 +40,7 @@ class RecipeUpdate(BaseModel):
     prep_time: int | None = None
     description: str | None = None
     image: str | None = None
+    isFav: bool | None = None
 
 recipes=[]
 
@@ -58,7 +61,8 @@ def seed_recipes():
                   ingredients="6 huevos, 3 patatas, 1 cebolla, aceite de oliva, sal",
                   prep_time=30,
                   description="La clásica tortilla española con patatas y cebolla pochada.",
-                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Tortilla_de_patatas.jpg/640px-Tortilla_de_patatas.jpg"
+                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Tortilla_de_patatas.jpg/640px-Tortilla_de_patatas.jpg",
+                  isFav=False
               ),
               RecipeResponse(
                   name="Gazpacho andaluz",
@@ -67,7 +71,8 @@ def seed_recipes():
                   ingredients="1kg tomates, 1 pepino, 1 pimiento verde, 1 diente de ajo, aceite, vinagre, sal",
                   prep_time=15,
                   description="Sopa fría de verduras típica del verano andaluz.",
-                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Gazpacho_andaluz.jpg/640px-Gazpacho_andaluz.jpg"
+                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Gazpacho_andaluz.jpg/640px-Gazpacho_andaluz.jpg",
+                  isFav=False
               ),
               RecipeResponse(
                   name="Paella valenciana",
@@ -76,7 +81,8 @@ def seed_recipes():
                   ingredients="400g arroz, 500g pollo, 200g judías verdes, 1 tomate, azafrán, pimentón, aceite, sal",
                   prep_time=60,
                   description="El plato más famoso de la cocina española con arroz y pollo.",
-                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Paella_valenciana_original.jpg/640px-Paella_valenciana_original.jpg"
+                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Paella_valenciana_original.jpg/640px-Paella_valenciana_original.jpg",
+                  isFav=False
               ),
               RecipeResponse(
                   name="Croquetas de jamón",
@@ -85,7 +91,8 @@ def seed_recipes():
                   ingredients="100g jamón serrano, 500ml leche, 50g mantequilla, 100g harina, pan rallado, huevo,aceite",
                   prep_time=45,
                   description="Croquetas cremosas de jamón serrano, crujientes por fuera y suaves por dentro.",
-                image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Croquetas_de_jamon.jpg/640px-Croquetas_de_jamon.jpg"
+                image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Croquetas_de_jamon.jpg/640px-Croquetas_de_jamon.jpg",
+                isFav=False
               ),
               RecipeResponse(
                   name="Churros con chocolate",
@@ -94,7 +101,8 @@ def seed_recipes():
                   ingredients="200g harina, 250ml agua, sal, aceite para freír, 200g chocolate negro, 200ml leche",
                   prep_time=20,
                   description="Churros crujientes acompañados de espeso chocolate caliente para mojar.",
-                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Churros_fritos.jpg/640px-Churros_fritos.jpg"
+                  image="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Churros_fritos.jpg/640px-Churros_fritos.jpg",
+                  isFav=False
               ),
           ]
           for recipe in recipes:
