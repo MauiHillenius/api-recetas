@@ -5,6 +5,7 @@ from typing import Optional
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 import os
+from datetime import datetime
 
 
 
@@ -30,6 +31,7 @@ class RecipeCreate(RecipeBase):
 class RecipeResponse(RecipeBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     isFav: Optional[bool] = Field(default=False)
+    last_visited_at: Optional[datetime] = Field(default=None)
     
 
 class RecipeUpdate(BaseModel):
@@ -131,9 +133,12 @@ def root():
 
 
 @app.get("/recipes") 
-def get_recipes():
+def get_recipes(category: str | None = None):
     with Session(engine) as session:
-        recipes = session.exec(select(RecipeResponse)).all()
+        query = select(RecipeResponse)
+        if category:
+            query = query.where(RecipeResponse.category == category)
+        recipes = session.exec(query).all() 
     return recipes
 
 
@@ -143,6 +148,10 @@ def get_recipe(recipe_id: int):
         recipe = session.get(RecipeResponse, recipe_id)
         if not recipe:
             raise HTTPException(status_code=404, detail="Recipe not found")
+        recipe.last_visited_at = datetime.now()
+        session.add(recipe)
+        session.commit()
+        session.refresh(recipe)
         return recipe
 
 @app.post("/recipes")
